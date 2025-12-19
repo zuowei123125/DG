@@ -1,0 +1,84 @@
+# ==================== Node.js ====================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# ==================== Python ====================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ==================== 构建输出 ====================
+Designer/dist/
+Designer/dist_core/
+Designer/build/
+*.tsbuildinfo
+
+# ==================== 缓存和临时文件 ====================
+.cache/
+.temp/
+tmp/
+*.tmp
+*.log
+*.swp
+*.swo
+*~
+
+# ==================== 数据库 ====================
+*.db
+*.sqlite
+*.sqlite3
+Server/designercep.db
+tempdemo/test_api.db
+tempdemo/test_auth.db
+
+# ==================== 敏感信息 ====================
+.env
+.env.local
+.env.production.local
+deploy_config.json
+AdminTool/deploy_config.json
+
+# ==================== IDE ====================
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+
+# ==================== 归档文件 ====================
+Server/archives/*.zip
+archives/
+tempdemo/serveradmin/archives/
+tempdemo/serveradmin/tmp/
+
+# ==================== 上传文件 ====================
+Server/uploads/
+upload/
+tempdemo/upload/result.zip
+
+# ==================== CEP 开发文件 ====================
+Designer/dist/Designer-dev/
+.debug
+
+# ==================== 其他 ====================
+*.zip
+!templates/*.zip
+*.rar
+*.7z
+

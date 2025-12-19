@@ -1,0 +1,56 @@
+services:
+  server:
+    build: .
+    container_name: designercep_server
+    ports:
+      - "8000:8000"
+    volumes:
+      # 挂载上传目录，持久化上传的文件
+      - ./archives:/app/archives
+    environment:
+      - ENV=production
+      - PROJECT_NAME=DesignerCEP Backend
+      - API_V1_STR=/api/v1
+      # 使用 MySQL 连接字符串
+      - DATABASE_URL=mysql+pymysql://designer_user:DesignerPass123!@db:3306/designer_db
+      - SECRET_KEY=change-me-in-production
+      - ACCESS_TOKEN_EXPIRE_MINUTES=10080
+      # 允许的跨域来源
+      - ALLOWED_ORIGINS=https://backend.aidg168.uk,https://www.aidg168.uk,http://localhost:5173
+      # 邮箱配置
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_PORT=587
+      - SMTP_USER=ly1104803132@gmail.com
+      - SMTP_PASSWORD=wsfrpnmkojpsqdkk
+      - EMAILS_FROM_EMAIL=ly1104803132@gmail.com
+      - EMAILS_FROM_NAME=Designer
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - designer_net
+
+  db:
+    image: mysql:8.0
+    container_name: designercep_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=RootSecretPass123!
+      - MYSQL_DATABASE=designer_db
+      - MYSQL_USER=designer_user
+      - MYSQL_PASSWORD=DesignerPass123!
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: unless-stopped
+    networks:
+      - designer_net
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+volumes:
+  db_data:
+
+networks:
+  designer_net:

@@ -1,0 +1,53 @@
+# Ignore git files
+.git
+.gitignore
+
+# Ignore python cache
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore test cache
+.pytest_cache
+
+# Ignore local env (env vars should be passed to docker)
+.env
+
+# Ignore databases (should be mounted as volumes)
+*.db
+*.sqlite
+
+# Ignore test files
+tests/
+test_*.py
+*_test.py
+
+# Ignore documentation
+API_DOCUMENTATION.md
+tempdocs/
+
+# Ignore temporary/extra directories
+tempdemo/
+test_unzip/
+dist_core_*.zip
+plugin_v1.0.zip
+test_plugin_v1.0.zip
+
+# Ignore deployment scripts
+deploy_core.py
+publish.py
+update_version.py
+update_version.py.bak
+
+# Ignore archives (should be a volume)
+archives/
+
+# Ignore frontend source/build if not served by backend (but user said Shell is mounted in Dev)
+# Assuming for production we might want to copy it if we serve it, or ignore it if Nginx serves it.
+# For a simple "all-in-one" container, we might keep it.
+# However, `Designer/` seems to be the built frontend assets.
+# Let's keep `Designer/` for now as the app mounts it in DEV mode, 
+# and user might want to run it similarly or we can configure it.
+# But usually node_modules should be ignored if they exist there.
+Designer/node_modules/
