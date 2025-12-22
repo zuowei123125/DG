@@ -26,8 +26,8 @@ export default defineConfig(({ command }) => {
     base: './',
     resolve: {
       alias: {
-        "@/": new URL("./src/", import.meta.url).pathname,
-        '@plugins': path.resolve(__dirname, './plugins')
+        "@": path.resolve(__dirname, 'src').replace(/\\/g, '/'),
+        '@plugins': path.resolve(__dirname, './plugins').replace(/\\/g, '/')
       }
     },
     define: {

@@ -45,7 +45,7 @@ const loading = ref(true)
 
 const currentUrl = ref(
  // localStorage.getItem('adminPanelUrl') || 'https://app.aidg168.uk'
-    localStorage.getItem('adminPanelUrl') || 'http://localhost:5175/#/login'
+    localStorage.getItem('adminPanelUrl') || 'http://localhost:5173/#/login'
 )
 
 function goBack() {

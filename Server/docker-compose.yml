@@ -94,8 +94,23 @@ services:
     networks:
       - designer_net
 
+  # ==================== Portainer (Docker管理) ====================
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: designercep_portainer
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - designer_net
+
 volumes:
   db_data2:
+    driver: local
+  portainer_data:
     driver: local
 
 networks:
