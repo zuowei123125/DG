@@ -1,30 +1,25 @@
-# DesignerCEP Caddy 配置文件
+# ==================== DesignerCEP Caddy 配置 ====================
 # 
-# 部署架构：
-# - app.aidg168.uk       → 前端应用（登录 + 主功能）
-# - backend.aidg168.uk   → 后端 API
+# 用途：
+# - app.aidg168.uk         → 前端应用（静态文件）
+# - backend.aidg168.uk     → 后端 API（反向代理到 FastAPI）
 #
-# 使用方法：
-# 1. 将此文件上传到服务器 /etc/caddy/Caddyfile
-# 2. sudo caddy validate --config /etc/caddy/Caddyfile
-# 3. sudo systemctl restart caddy
+# 部署位置：/etc/caddy/Caddyfile
 
-# ==================== 全局配置 ====================
 {
-    # 如果使用 Cloudflare，关闭自动 HTTPS
-    # auto_https off
-    
-    # 如果不使用 Cloudflare，保持默认（自动申请证书）
+    # 邮箱（用于 HTTPS 证书）
     email admin@aidg168.uk
+    
+    # 使用 Cloudflare 橙云代理，关闭自动 HTTPS
+    auto_https off
 }
 
 # ==================== 前端应用 ====================
-app.aidg168.uk {
-    # 静态文件根目录
-    root * /var/www/DesignerCEP/Server/static/app
+http://app.aidg168.uk, https://app.aidg168.uk {
+    # 静态文件根目录（已修复路径）
+    root * /var/www/app
     
-    # SPA 路由支持（重要！）
-    # 所有路由都返回 index.html，让 Vue Router 处理
+    # SPA 路由支持（所有请求返回 index.html）
     try_files {path} /index.html
     
     # 提供静态文件
@@ -32,80 +27,26 @@ app.aidg168.uk {
     
     # ========== 缓存策略 ==========
     
-    # HTML 文件不缓存（确保更新即时生效）
-    @html {
-        path *.html
-    }
-    header @html {
-        Cache-Control "no-cache, no-store, must-revalidate"
-        Pragma "no-cache"
-        Expires "0"
-    }
+    # HTML 不缓存
+    @html path *.html
+    header @html Cache-Control "no-cache, no-store, must-revalidate"
     
-    # JS/CSS 长期缓存（文件名有 hash，可以安全缓存）
-    @assets {
-        path *.js *.css *.woff *.woff2 *.ttf *.eot
-    }
-    header @assets {
-        Cache-Control "public, max-age=31536000, immutable"
-    }
+    # JS/CSS 长期缓存
+    @assets path *.js *.css *.woff *.woff2
+    header @assets Cache-Control "public, max-age=31536000, immutable"
     
     # 图片缓存
-    @images {
-        path *.png *.jpg *.jpeg *.gif *.svg *.ico *.webp
-    }
-    header @images {
-        Cache-Control "public, max-age=2592000"
-    }
+    @images path *.png *.jpg *.jpeg *.gif *.svg *.ico
+    header @images Cache-Control "public, max-age=2592000"
     
     # ========== 安全头 ==========
     header {
-        # 允许在 iframe 中加载（CEP 需要）
-        X-Frame-Options "SAMEORIGIN"
-        
-        # 防止 MIME 类型嗅探
+        # 允许 CEP 插件通过 iframe 嵌入
+        # 注释掉 X-Frame-Options 以支持 Photoshop 插件
+        # X-Frame-Options "SAMEORIGIN"
         X-Content-Type-Options "nosniff"
-        
-        # XSS 保护
         X-XSS-Protection "1; mode=block"
-        
-        # 隐藏服务器信息
         -Server
-    }
-    
-    # ========== 压缩 ==========
-    encode {
-        gzip 6
-        zstd
-    }
-    
-    # ========== 日志 ==========
-    log {
-        output file /var/log/caddy/app.aidg168.uk.log {
-            roll_size 50mb
-            roll_keep 10
-            roll_keep_for 720h
-        }
-        format json
-        level INFO
-    }
-}
-
-# ==================== 后端 API ====================
-backend.aidg168.uk {
-    # 反向代理到 FastAPI
-    reverse_proxy localhost:8000 {
-        # 传递客户端真实 IP
-        header_up X-Real-IP {remote_host}
-        header_up X-Forwarded-For {remote_host}
-        header_up X-Forwarded-Proto {scheme}
-        header_up X-Forwarded-Host {host}
-        
-        # 超时设置
-        transport http {
-            dial_timeout 5s
-            response_header_timeout 30s
-        }
     }
     
     # ========== 压缩 ==========
@@ -113,19 +54,33 @@ backend.aidg168.uk {
     
     # ========== 日志 ==========
     log {
-        output file /var/log/caddy/backend.aidg168.uk.log {
+        output file /var/log/caddy/app.log {
             roll_size 50mb
-            roll_keep 10
-            roll_keep_for 720h
+            roll_keep 5
         }
-        format json
-        level INFO
     }
 }
 
-# ==================== 主域名重定向（可选）====================
-aidg168.uk, www.aidg168.uk {
-    # 重定向到应用
+# ==================== 后端 API ====================
+http://backend.aidg168.uk, https://backend.aidg168.uk {
+    # 反向代理到 Docker 容器（localhost:8000）
+    # Caddy 在宿主机运行，需要通过 localhost 访问 Docker 容器
+    reverse_proxy localhost:8000 {
+        header_up X-Real-IP {remote_host}
+    }
+    
+    encode gzip
+    
+    log {
+        output file /var/log/caddy/backend.log {
+            roll_size 50mb
+            roll_keep 5
+        }
+    }
+}
+
+# ==================== 主域名重定向 ====================
+http://aidg168.uk, http://www.aidg168.uk, https://aidg168.uk, https://www.aidg168.uk {
     redir https://app.aidg168.uk{uri} permanent
 }
 

@@ -1,56 +1,103 @@
 services:
-  server:
+  # ==================== 后端 API (FastAPI) ====================
+  backend:
     build: .
-    container_name: designercep_server
+    container_name: designercep_backend
+    restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "8000:8000"  # 映射端口到宿主机，让 Caddy 能访问
     volumes:
-      # 挂载上传目录，持久化上传的文件
+      # 挂载应用代码 (确保热更新)
+      - ./app:/app/app
+      # 挂载归档目录
       - ./archives:/app/archives
+      # 数据库文件（开发用）
+      - ./designercep.db:/app/designercep.db
     environment:
+      # 从 .env 文件读取配置
       - ENV=production
-      - PROJECT_NAME=DesignerCEP Backend
+      - PROJECT_NAME=DesignerCEP
       - API_V1_STR=/api/v1
-      # 使用 MySQL 连接字符串
+      
+      # 数据库
       - DATABASE_URL=mysql+pymysql://designer_user:DesignerPass123!@db:3306/designer_db
-      - SECRET_KEY=change-me-in-production
+      
+      # PyMySQL 连接配置 (用于 checkin/admin_config 等模块)
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=designer_user
+      - DB_PASSWORD=DesignerPass123!
+      - DB_NAME=designer_db
+      
+      # 安全配置
+      - SECRET_KEY=${SECRET_KEY:-your-super-secret-key-change-this}
       - ACCESS_TOKEN_EXPIRE_MINUTES=10080
-      # 允许的跨域来源
-      - ALLOWED_ORIGINS=https://backend.aidg168.uk,https://www.aidg168.uk,http://localhost:5173
-      # 邮箱配置
-      - SMTP_HOST=smtp.gmail.com
-      - SMTP_PORT=587
-      - SMTP_USER=ly1104803132@gmail.com
-      - SMTP_PASSWORD=wsfrpnmkojpsqdkk
-      - EMAILS_FROM_EMAIL=ly1104803132@gmail.com
+      
+      # CORS
+      - ALLOWED_ORIGINS=https://app.aidg168.uk,https://backend.aidg168.uk,https://aidg168.uk
+      
+      # 邮箱
+      - SMTP_HOST=${SMTP_HOST:-smtp.gmail.com}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - EMAILS_FROM_EMAIL=${EMAILS_FROM_EMAIL}
       - EMAILS_FROM_NAME=Designer
     depends_on:
       db:
         condition: service_healthy
-    restart: unless-stopped
     networks:
       - designer_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
+  # ==================== MySQL 数据库 ====================
   db:
     image: mysql:8.0
     container_name: designercep_db
+    restart: unless-stopped
+    ports:
+      - "3306:3306" # 允许从宿主机访问数据库
     environment:
       - MYSQL_ROOT_PASSWORD=RootSecretPass123!
       - MYSQL_DATABASE=designer_db
       - MYSQL_USER=designer_user
       - MYSQL_PASSWORD=DesignerPass123!
     volumes:
-      - db_data:/var/lib/mysql
-    restart: unless-stopped
+      - db_data2:/var/lib/mysql
+      - ./mysql.cnf:/etc/mysql/conf.d/custom.cnf:ro
     networks:
       - designer_net
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ==================== phpMyAdmin ====================
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: designercep_pma
+    restart: unless-stopped
+    ports:
+      - "3388:80"
+    environment:
+      - PMA_HOST=db
+      - PMA_PORT=3306
+      - MYSQL_ROOT_PASSWORD=zuowei1216! # 可选，用于自动登录
+      - UPLOAD_LIMIT=64M
+    depends_on:
+      - db
+    networks:
+      - designer_net
 
 volumes:
-  db_data:
+  db_data2:
+    driver: local
 
 networks:
   designer_net:
+    driver: bridge

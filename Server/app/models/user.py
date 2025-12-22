@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, func, ForeignKey, Text, Boolean
+from sqlalchemy import Column, Integer, String, DateTime, func, ForeignKey, Text, Boolean, Date
 from sqlalchemy.orm import relationship
 from app.db import Base
 
@@ -22,5 +22,19 @@ class User(Base):
     # Password Reset
     reset_token = Column(String(128), nullable=True)
     reset_token_expire = Column(DateTime(timezone=True), nullable=True)
+
+    # Profile & VIP & Check-in
+    nickname = Column(String(50), nullable=True)
+    avatar = Column(String(500), nullable=True)
+    points = Column(Integer, default=0)
+    level = Column(Integer, default=1)
+    vip_type = Column(String(20), default='none') # 'none', 'vip', 'svip'
+    vip_expire = Column(DateTime(timezone=True), nullable=True)
+    vip_daily_quota = Column(Integer, default=0)
+    vip_quota_reset_date = Column(Date, nullable=True)
+    
+    total_check_in_days = Column(Integer, default=0)
+    consecutive_check_in = Column(Integer, default=0)
+    last_check_in_date = Column(Date, nullable=True)
 
     group = relationship("PluginGroup", back_populates="users")

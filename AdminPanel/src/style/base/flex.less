@@ -1,0 +1,228 @@
+/* 基础样式 , 从左到右，不压缩子元素，超出不换行*/
+
+.f-lr {
+    display: flex;
+    align-content: flex-start;
+    > * {
+        flex-shrink: 0;
+    }
+}
+
+/* 基础样式 , 从右到左，不压缩子元素，超出不换行*/
+
+.f-rl {
+    display: flex;
+    align-content: flex-start;
+    flex-direction: row-reverse;
+    > * {
+        flex-shrink: 0;
+    }
+}
+
+/* 从左到右，上下居中，超出不换行*/
+
+.f-lr-center {
+    display: flex;
+    align-items: center;
+    > * {
+        flex-shrink: 0;
+    }
+}
+
+/* 从右到左，上下居中，超出不换行*/
+
+.f-rl-center {
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    > * {
+        flex-shrink: 0;
+    }
+}
+
+/* 基础样式 , 从左到右，不压缩子元素，超出则自动换行 */
+
+.f-lr-wrap {
+    display: flex;
+    align-content: flex-start;
+    flex-flow: row wrap;
+    > * {
+        flex-shrink: 0;
+    }
+}
+
+/* 基础样式 , 从右到左，不压缩子元素，超出则自动换行 */
+
+.f-rl-wrap {
+    display: flex;
+    align-content: flex-start;
+    flex-flow: row-reverse wrap;
+    > * {
+        flex-shrink: 0;
+    }
+}
+
+/*横向左右均匀分布 不压缩子元素  （元素间距离平均分配）*/
+.f-lr-evenly {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    > * {
+        flex-shrink: 0;
+    }
+}
+
+/*横向左右均匀分布 从右到左 不压缩子元素 （元素间距离平均分配）*/
+.f-rl-evenly {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-direction: row-reverse;
+    > * {
+        flex-shrink: 0;
+    }
+}
+/*左中右分布 左到右  （第一个元素靠起点，最后一个元素靠终点，余下元素平均分配空间）*/
+.f-lr-between {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    > * {
+        flex-shrink: 0;
+    }
+}
+
+/*左中右分布 右到左  （第一个元素靠起点，最后一个元素靠终点，余下元素平均分配空间）*/
+.f-rl-between {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+    > * {
+        flex-shrink: 0;
+    }
+}
+/*纵向上下分布  不压缩子元素*/
+.f-tb {
+    display: flex;
+    flex-flow: column nowrap;
+    > * {
+        flex-shrink: 0;
+    }
+}
+/*纵向上下分布 从下到上 不压缩子元素*/
+.f-bt {
+    display: flex;
+    flex-flow: column-reverse nowrap;
+    > * {
+        flex-shrink: 0;
+    }
+}
+/*纵向上下分布 左右居中 不压缩子元素*/
+.f-tb-center {
+    display: flex;
+    align-items: center;
+    flex-flow: column nowrap;
+    > * {
+        flex-shrink: 0;
+    }
+}
+
+/*纵向上下分布 从下到上  左右居中 不压缩子元素*/
+.f-bt-center {
+    display: flex;
+    align-items: center;
+    flex-flow: column-reverse nowrap;
+    > * {
+        flex-shrink: 0;
+    }
+}
+
+// 纵向上下分布 ，不压缩子元素，超出则自动换行
+.f-tb-wrap {
+    display: flex;
+    align-content: flex-start;
+    flex-flow: column wrap;
+    > * {
+        flex-shrink: 0;
+    }
+}
+
+// 纵向上下分布 ，从下到上，不压缩子元素，超出则自动换行
+.f-bt-wrap {
+    display: flex;
+    align-content: flex-start;
+    flex-flow: column-reverse wrap;
+    > * {
+        flex-shrink: 0;
+    }
+}
+
+// 纵向上下均匀分布 不压缩子元素  （元素间距离平均分配）
+.f-tb-evenly {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-evenly;
+    > * {
+        flex-shrink: 0;
+    }
+}
+
+// 纵向上下均匀分布 不压缩子元素  （元素间距离平均分配）
+.f-bt-evenly {
+    display: flex;
+    flex-flow: column-reverse nowrap;
+    justify-content: space-evenly;
+    > * {
+        flex-shrink: 0;
+    }
+}
+
+// 纵向上下分布 上到下  （第一个元素靠起点，最后一个元素靠终点，余下元素平均分配空间）
+.f-tb-between {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    > * {
+        flex-shrink: 0;
+    }
+}
+
+// 纵向上下分布 上到下  （第一个元素靠起点，最后一个元素靠终点，余下元素平均分配空间）
+.f-bt-between {
+    display: flex;
+    flex-flow: column-reverse nowrap;
+    justify-content: space-between;
+    > * {
+        flex-shrink: 0;
+    }
+}
+
+/*垂直水平居中*/
+.f-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    > * {
+        flex-shrink: 0;
+    }
+}
+
+/* 元素在主交叉轴上的对齐方式——居中 */
+.f-align-center {
+    align-items: center;
+}
+
+/*自动填充剩余空间*/
+.f-space {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+.f-full {
+    flex-shrink: 0;
+}
+
+.f-shrink {
+    flex-shrink: 1;
+}

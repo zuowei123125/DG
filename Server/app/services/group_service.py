@@ -29,17 +29,34 @@ class GroupService:
         if not group:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="用户所属组不存在")
 
-        if not group.current_version_file:
+        # 允许无版本的情况，或者使用默认版本
+        version_file = group.current_version_file
+        if not version_file or version_file == '-':
+            # 尝试查找任意一个版本，或者返回空
+            # 根据用户要求 "现在默认只有一个了"
+            # 这里可以列出 archives 目录下的第一个文件
+            import os
+            try:
+                archives_dir = "archives"
+                files = [f for f in os.listdir(archives_dir) if f.endswith('.zip')]
+                if files:
+                    files.sort(reverse=True) # Assuming newer versions sort higher
+                    version_file = files[0]
+            except:
+                pass
+
+        if not version_file or version_file == '-':
+             # 如果还是没有，则抛出异常，或者返回空 update
              raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="当前组无可用版本")
 
         # Construct download URL (assuming base URL or relative path)
         # In a real scenario, this might be from config
-        download_url = f"/download/{group.current_version_file}"
+        download_url = f"/download/{version_file}"
         
         # Extract version from filename roughly or use file metadata if available
         # Assuming filename format: plugin_v1.0.2.zip
         version = "unknown"
-        filename = group.current_version_file
+        filename = version_file
         if "v" in filename:
             try:
                 # Simple extraction logic, can be improved

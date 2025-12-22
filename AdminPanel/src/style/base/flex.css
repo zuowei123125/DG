@@ -1,0 +1,130 @@
+/* flex 布局的定义
+   ========================================================================== */
+
+
+/* 基础样式 , 从左到右，不压缩子元素，超出则换行排列 */
+
+.f-base {
+    display: flex;
+    flex-flow: row wrap;
+    align-content: flex-start;
+}
+
+
+/* 基础样式，垂直居中，从左到右排序  会压缩子元素*/
+
+.f-baseX {
+    display: flex;
+    align-items: center;
+}
+
+
+/* 基础样式，从上到下排序元素 */
+
+.f-baseY {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.f-baseLR {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.f-arrayX {
+    display: flex;
+    flex-direction: row;
+}
+
+
+/* 横向排列 */
+
+.f-arrayY {
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+}
+
+.f-alignNone {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: space-between;
+}
+
+
+/* 上下左右居中 */
+
+.f-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* 不压缩所有子元素 */
+
+.f-allFull {
+    flex-flow: row wrap;
+    align-content: center;
+}
+
+
+/* 水平对齐方向 向左对齐 */
+
+.f-levelL {
+    justify-content: flex-start;
+}
+
+
+/* 水平对齐方向 居中对齐 */
+
+.f-levelC {
+    justify-content: center;
+}
+
+
+/* 水平对齐方向 向右对齐 */
+
+.f-levelR {
+    justify-content: flex-end;
+}
+
+
+/* 控制垂直对齐方式 上对齐 */
+
+.f-verticalT {
+    align-items: flex-start;
+}
+
+
+/* 控制垂直对齐方式 居中 */
+
+.f-verticalC {
+    display: flex;
+    align-items: center;
+}
+
+
+/* 控制垂直对齐方式 下对齐 */
+
+.f-verticalB {
+    display: flex;
+    align-items: flex-end;
+}
+
+
+/* 这个用在子元素，用于分配剩余空间 */
+
+.f-space {
+    flex-grow: 1;
+}
+
+
+/* 不压缩子元素，既保留元素的完整大小,应用在元素身上 */
+
+.f-full {
+    flex-shrink: 0;
+}

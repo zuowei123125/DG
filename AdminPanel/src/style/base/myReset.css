@@ -1,0 +1,14 @@
+* {
+    outline: none;
+    box-sizing: border-box;
+    margin: 0px;
+    padding: 0px;
+}
+
+svg,
+img {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}

@@ -28,6 +28,9 @@ RUN mkdir -p archives
 # 暴露端口
 EXPOSE 8000
 
+# 复制启动脚本并设置权限
+COPY start.sh .
+RUN chmod +x start.sh
+
 # 启动命令
-# 生产环境推荐使用 gunicorn 管理 uvicorn workers，或者直接用 uvicorn
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["./start.sh"]

@@ -28,6 +28,7 @@ def init_db():
     from app.models.user import User
     from app.models.group import PluginGroup
     from app.models.session import UserSession
+    from app.models.business import FeatureConfig, VipConfig, CheckInConfig, CheckInRecord, PointsHistory
     Base.metadata.create_all(bind=engine)
     ensure_migrations()
     seed_data()
@@ -35,15 +36,35 @@ def init_db():
 def seed_data():
     """Ensure default data exists"""
     from app.models.group import PluginGroup
+    from app.models.business import FeatureConfig, VipConfig, CheckInConfig
     db = SessionLocal()
     try:
+        # Seed Groups
         default_group = db.query(PluginGroup).filter(PluginGroup.name == "default").first()
         if not default_group:
             print("Creating 'default' group...")
             new_group = PluginGroup(name="default", comment="Default User Group")
             db.add(new_group)
-            db.commit()
-            print("Default group created.")
+            
+        # Seed VIP Config
+        if db.query(VipConfig).count() == 0:
+            print("Seeding VIP Config...")
+            db.add(VipConfig(vip_type="vip", name="VIP会员", price=30.0, daily_quota=20, points_multiplier=1.5))
+            db.add(VipConfig(vip_type="svip", name="SVIP会员", price=88.0, daily_quota=-1, points_multiplier=2.0))
+            
+        # Seed Checkin Config
+        if db.query(CheckInConfig).count() == 0:
+            print("Seeding Checkin Config...")
+            db.add(CheckInConfig(consecutive_days=1, base_points=10, bonus_points=0, total_points=10))
+            db.add(CheckInConfig(consecutive_days=3, base_points=10, bonus_points=5, total_points=15))
+            db.add(CheckInConfig(consecutive_days=7, base_points=10, bonus_points=20, total_points=30))
+            
+        # Seed Features
+        if db.query(FeatureConfig).count() == 0:
+            print("Seeding Features...")
+            db.add(FeatureConfig(feature_key="ai_remove_bg", feature_name="智能抠图", points_cost=10, category="ai"))
+            
+        db.commit()
     except Exception as e:
         print(f"Error seeding data: {e}")
     finally:
@@ -97,3 +118,27 @@ def ensure_migrations():
             add_col("users", "reset_token", "VARCHAR(128) NULL")
         if not has_column("users", "reset_token_expire"):
             add_col("users", "reset_token_expire", "TIMESTAMP NULL")
+
+        # users profile & vip columns
+        if not has_column("users", "nickname"):
+            add_col("users", "nickname", "VARCHAR(50) NULL")
+        if not has_column("users", "avatar"):
+            add_col("users", "avatar", "VARCHAR(500) NULL")
+        if not has_column("users", "points"):
+            add_col("users", "points", "INTEGER DEFAULT 0")
+        if not has_column("users", "level"):
+            add_col("users", "level", "INTEGER DEFAULT 1")
+        if not has_column("users", "vip_type"):
+            add_col("users", "vip_type", "VARCHAR(20) DEFAULT 'none'")
+        if not has_column("users", "vip_expire"):
+            add_col("users", "vip_expire", "TIMESTAMP NULL")
+        if not has_column("users", "vip_daily_quota"):
+            add_col("users", "vip_daily_quota", "INTEGER DEFAULT 0")
+        if not has_column("users", "vip_quota_reset_date"):
+            add_col("users", "vip_quota_reset_date", "DATE NULL")
+        if not has_column("users", "total_check_in_days"):
+            add_col("users", "total_check_in_days", "INTEGER DEFAULT 0")
+        if not has_column("users", "consecutive_check_in"):
+            add_col("users", "consecutive_check_in", "INTEGER DEFAULT 0")
+        if not has_column("users", "last_check_in_date"):
+            add_col("users", "last_check_in_date", "DATE NULL")

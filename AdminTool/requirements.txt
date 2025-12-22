@@ -1,5 +1,4 @@
 PyQt5
 requests
 paramiko
-pymysql
-colorama
+PyQt-Fluent-Widgets

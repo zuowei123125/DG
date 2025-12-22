@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 import os
 from pathlib import Path
 from app.core.config import settings
-from app.api.v1 import auth, client, admin, analytics, jsx_demo
+from app.api.v1 import auth, client, admin, analytics, jsx_demo, admin_config, feature, checkin, user_profile, stats
 from app.db import init_db
 from datetime import datetime
 
@@ -60,6 +60,13 @@ app.include_router(client.router, prefix=f"{settings.API_V1_STR}/client", tags=[
 app.include_router(admin.router, prefix=f"{settings.API_V1_STR}/admin", tags=["admin"])
 app.include_router(analytics.router, prefix=f"{settings.API_V1_STR}/analytics", tags=["analytics"])
 app.include_router(jsx_demo.router, prefix=f"{settings.API_V1_STR}/jsx_demo", tags=["jsx_demo"])
+
+# 新增路由
+app.include_router(admin_config.router, prefix=settings.API_V1_STR, tags=["admin-config"])
+app.include_router(feature.router, prefix=settings.API_V1_STR, tags=["feature"])
+app.include_router(checkin.router, prefix=settings.API_V1_STR, tags=["checkin"])
+app.include_router(user_profile.router, prefix=settings.API_V1_STR, tags=["user-profile"])
+app.include_router(stats.router, prefix=settings.API_V1_STR, tags=["stats"])
 
 # Health Check
 @app.get("/health")

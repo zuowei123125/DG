@@ -14,6 +14,16 @@ from datetime import datetime, timezone
 
 router = APIRouter()
 
+@router.post("/verify", response_model=VerifyResponse)
+async def verify(
+    verify_data: VerifyRequest, 
+    db: Session = Depends(get_db),
+    current_username: str = Depends(get_current_user)
+):
+    """验证用户授权状态"""
+    # 许可证验证接口：验证 token 是否有效，检查账户过期，更新活跃时间
+    return auth_service.verify_license(db, verify_data, current_username)
+
 @router.post("/send-verification-code")
 async def send_verification_code(body: SendVerificationCodeRequest, db: Session = Depends(get_db)):
     # 发送注册验证码
@@ -97,3 +107,5 @@ async def get_online_time(username: str, db: Session = Depends(get_db)):
 async def heartbeat(body: UserHeartbeat, db: Session = Depends(get_db)):
     # 心跳接口：更新会话的最近在线时间
     return auth_service.heartbeat(db, body.username, body.device_id)
+
+
