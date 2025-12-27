@@ -109,11 +109,23 @@ def test_format_currency():
 
 def test_timestamp():
     """测试时间戳函数"""
+    from datetime import datetime
+    
     timestamp = get_timestamp()
     assert isinstance(timestamp, str)
     assert len(timestamp) > 0
-    # 简单检查是否包含日期部分
-    assert "2025" in timestamp or "2024" in timestamp or "2026" in timestamp
+    
+    # 检查是否是有效的 ISO 格式时间戳
+    # 应该能够被解析为 datetime 对象
+    try:
+        parsed_time = datetime.fromisoformat(timestamp)
+        # 检查是否是最近的时间（在过去 1 分钟内）
+        now = datetime.now()
+        time_diff = abs((now - parsed_time).total_seconds())
+        assert time_diff < 60, "时间戳应该是当前时间 / Timestamp should be current time"
+    except ValueError:
+        assert False, "时间戳格式无效 / Invalid timestamp format"
+    
     print("✓ test_timestamp passed")
 
 

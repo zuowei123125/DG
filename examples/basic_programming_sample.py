@@ -19,6 +19,7 @@ This file demonstrates core Python programming concepts and best practices.
 
 import json
 import os
+import re
 from typing import List, Dict, Optional, Any
 from datetime import datetime
 from pathlib import Path
@@ -348,7 +349,6 @@ def validate_email(email: str) -> bool:
     Returns:
         bool: 是否有效 / Is valid
     """
-    import re
     pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return re.match(pattern, email) is not None
 
