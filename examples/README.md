@@ -61,6 +61,21 @@ The program demonstrates all core concepts with detailed example output, includi
 - File save and load operations
 - Utility function demonstrations
 
+#### 测试 / Testing
+
+运行示例的单元测试：
+
+```bash
+# 运行测试 / Run tests
+python tests/test_basic_programming_sample.py
+```
+
+所有核心功能都有对应的单元测试，确保代码质量和正确性。
+
+Run unit tests for the example:
+
+All core functions have corresponding unit tests to ensure code quality and correctness.
+
 ## 学习路径 / Learning Path
 
 1. **初学者 / Beginners**：从 `basic_programming_sample.py` 开始
