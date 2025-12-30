@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ExtensionManifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ExtensionBundleId="com.temp.id" ExtensionBundleVersion="1.0" Version="6.0"> <!-- MAJOR-VERSION-UPDATE-MARKER -->
+    <ExtensionList>
+        <Extension Id="com.temp.id" Version="6.1.0"/>
+    </ExtensionList>
+    <Geometry>
+        <Size>
+            <Height>600</Height>
+            <Width>280</Width>
+        </Size>
+        <MaxSize>
+            <Height>4080</Height>
+            <Width>600</Width>
+        </MaxSize>
+        <MinSize>
+            <Height>600</Height>
+            <Width>280</Width>
+        </MinSize>
+    </Geometry>
+    <DispatchInfoList>
+    
+    </DispatchInfoList>
+</ExtensionManifest>

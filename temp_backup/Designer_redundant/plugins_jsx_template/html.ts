@@ -1,0 +1,20 @@
+export function joinHtml(name:string,server:string){
+    return `
+    <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${name}</title>
+    <script>
+        window.location.href = "${server}"
+    </script>
+</head>
+
+<body>
+</body>
+</html>
+    `
+}

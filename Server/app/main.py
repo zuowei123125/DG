@@ -79,23 +79,24 @@ if IS_DEV:
     app.mount("/download", StaticFiles(directory="archives"), name="download")
 
     # Mount Shell directory (登录页面)
-    shell_dir = Path(__file__).parent.parent / "Designer"
-    if shell_dir.exists():
-        app.mount("/shell", StaticFiles(directory=str(shell_dir), html=True), name="shell")
-        print(f"✓ Shell 已挂载 (Dev): {shell_dir}")
-    else:
-        print(f"⚠️ Shell 目录不存在: {shell_dir}")
-        print("  请先运行: cd Designer && npm run build:shell")
+    # shell_dir = Path(__file__).parent.parent / "Designer"
+    # if shell_dir.exists():
+    #     app.mount("/shell", StaticFiles(directory=str(shell_dir), html=True), name="shell")
+    #     print(f"✓ Shell 已挂载 (Dev): {shell_dir}")
+    # else:
+    #     # print(f"⚠️ Shell 目录不存在: {shell_dir}")
+    #     # print("  请先运行: cd Designer && npm run build:shell")
+    #     pass
 
     # Mount DesignerCache directory to serve Core application files
-    designer_cache = Path.home() / "AppData" / "Roaming" / "DesignerCache"
-    if designer_cache.exists():
-        app.mount("/core", StaticFiles(directory=str(designer_cache), html=True), name="core")
-        print(f"✓ Core 已挂载 (Dev): {designer_cache}")
-    else:
-        # Create directory if it doesn't exist
-        designer_cache.mkdir(parents=True, exist_ok=True)
-        app.mount("/core", StaticFiles(directory=str(designer_cache), html=True), name="core")
+    # designer_cache = Path.home() / "AppData" / "Roaming" / "DesignerCache"
+    # if designer_cache.exists():
+    #     app.mount("/core", StaticFiles(directory=str(designer_cache), html=True), name="core")
+    #     print(f"✓ Core 已挂载 (Dev): {designer_cache}")
+    # else:
+    #     # Create directory if it doesn't exist
+    #     designer_cache.mkdir(parents=True, exist_ok=True)
+    #     app.mount("/core", StaticFiles(directory=str(designer_cache), html=True), name="core")
 else:
     print("ℹ️  Production Mode: Static files are NOT mounted by FastAPI (handled by Caddy/Nginx).")
 

@@ -44,8 +44,11 @@ const frameRef = ref<HTMLIFrameElement | null>(null)
 const loading = ref(true)
 
 const currentUrl = ref(
- // localStorage.getItem('adminPanelUrl') || 'https://app.aidg168.uk'
-    localStorage.getItem('adminPanelUrl') || 'http://localhost:5173/#/login'
+  localStorage.getItem('adminPanelUrl') || (
+    __DEV__ 
+      ? 'http://localhost:5173' 
+      : 'https://app.aidg168.uk'
+  )
 )
 
 function goBack() {
